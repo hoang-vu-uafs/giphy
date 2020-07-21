@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import axios from "axios";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// display trending memes first open
+// return new memes based on search term
+
+class App extends React.Component {
+  state = {
+    url: "",
+  };
+  async componentDidMount() {
+    const data = await axios.get("https://api.giphy.com/v1/gifs/search", {
+      params: {
+        api_key: "O2VYOt1xUNqjbZw3GP2xlwF8b0ZcYELi",
+        q: "cheeseburgers",
+        rating: "g",
+      },
+    });
+
+    console.log(data.data.data);
+    this.setState({
+      url: data.data.data[0].embed_url,
+      url2: data.data.data[0].images.downsized_medium.url,
+    });
+    // .then((res) => {
+    //   console.log(res);
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    // });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div>
+          <iframe src={this.state.url} />
+          <img src={this.state.url2} />
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
